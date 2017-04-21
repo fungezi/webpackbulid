@@ -10,6 +10,13 @@
   },
   "dependencies": {
     "babel-core": "^6.24.0",
-    "extract-text-webpack-plugin": "^2.1.0"
+    "extract-text-webpack-plugin": "^2.1.0",
+    "react": "^15.5.4",
+    "redux": "^3.6.0",
+    "webpack-dev-server": "^2.4.2"
+  },
+  "scripts": {
+    "clean:dist": "rm -rf ./bulid/*",
+    "start": "webpack-dev-server --hot --watch-poll --inline --content-base ./bulid --host 0.0.0 --port 3000"
   }
 }

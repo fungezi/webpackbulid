@@ -4,32 +4,21 @@ var webpack = require("webpack");
 var htmlWebpackPlugin = require("html-webpack-plugin");
 var extracTtextWebpackPlugin = require("extract-text-webpack-plugin");//生成css文件
 var nodeModulesPath = "/node_modules/";
+var path = require("path");
+var src = "./src";
+var style = "./style";
 module.exports = {
 	entry: {
 		index: "./src/index.js",
-		vendors:["react","react-dom","redux"]
+		// vendors:["react","react-dom","redux"]
 	},
 	output: {
 		path: path.join(__dirname,"bulid"),
-		filename: "js/[name].js",
-		publicPath: "./bulid/"
+		filename: "js/[name].[hash].js",
 	},
-	module: {
-		loaders: [
-			{test: /\.js$/, loader: "babel-loader",query: {presets: ['es2015']} },
-	        {test: /\.css$/, loader: "style-loader!css-loader"},
-	        {test: /\.(jpg|png)$/, loader: "url-loader?limit=8192"},
-	      	{test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"}
-		]
-	},
-	plugins: [//主要完成文件的操作
-		new htmlWebpackPlugin({template: path.join(__dirname,"template/index.html")}),//根据模板文件生成html
-		new extracTtextWebpackPlugin("/style/styles.[hash].js"),
-		new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'js/vendors.[hash].js'}),//根据入口处的第三方依赖文件生成vendor文件js
-	],
 	resolve: {
-		extensions: [".js",".css","",".jsx",".scss"],
-		modulesDirectories: ["static","style","src","node_modules"],
+		extensions: [".js",".css",".jsx",".scss"],
+		modules: ["static","style","src","node_modules"],
 		alias: {
 			'react': nodeModulesPath + "react",
 			'react-dom': nodeModulesPath + "react-dom",
@@ -37,7 +26,37 @@ module.exports = {
 			'react-redux': nodeModulesPath + "react-redux",
 			'react-router': nodeModulesPath + "react-router"
 		}
-	}
+	},
+	module: {
+		loaders: [
+			{
+				test: /\.js$/, 
+				loader: "babel-loader",
+				query: {presets: ['es2015']},
+				include: src 
+			},
+	        {
+	        	test: /\.css$/, 
+	        	loader: "style-loader!css-loader",
+	        	include: style
+	        },
+	        {
+	        	test: /\.(jpg|png)$/, 
+	        	loader: "url-loader?limit=8192"
+	        },
+	      	{
+	      		test: /\.scss$/, 
+	      		loader: "style-loader!css-loader!sass-loader",
+	      		include: style
+	      	}
+		]
+	},
+	plugins: [//主要完成文件的操作
+		new htmlWebpackPlugin({template: path.join(__dirname,"template/index.html")}),//根据模板文件生成html
+		new extracTtextWebpackPlugin("/style/styles.[hash].css"),
+		new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'js/vendors.[hash].js'}),//根据入口处的第三方依赖文件生成vendor文件js
+	]
+	
 }
 
 // webpack使用总结：
