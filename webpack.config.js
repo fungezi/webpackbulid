@@ -2,6 +2,8 @@
 var path = require("path");
 var webpack = require("webpack");
 var htmlWebpackPlugin = require("html-webpack-plugin");
+var extracTtextWebpackPlugin = require("extract-text-webpack-plugin");//生成css文件
+var nodeModulesPath = "/node_modules/";
 module.exports = {
 	entry: {
 		index: "./src/index.js",
@@ -20,11 +22,22 @@ module.exports = {
 	      	{test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"}
 		]
 	},
-	plugins: [
-		new htmlWebpackPlugin({template: path.join(__dirname,"template/index.html")}),
-		new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'js/vendors.js'}),
-
-	]
+	plugins: [//主要完成文件的操作
+		new htmlWebpackPlugin({template: path.join(__dirname,"template/index.html")}),//根据模板文件生成html
+		new extracTtextWebpackPlugin("/style/styles.[hash].js"),
+		new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'js/vendors.[hash].js'}),//根据入口处的第三方依赖文件生成vendor文件js
+	],
+	resolve: {
+		extensions: [".js",".css","",".jsx",".scss"],
+		modulesDirectories: ["static","style","src","node_modules"],
+		alias: {
+			'react': nodeModulesPath + "react",
+			'react-dom': nodeModulesPath + "react-dom",
+			'redux': nodeModulesPath + "redux",
+			'react-redux': nodeModulesPath + "react-redux",
+			'react-router': nodeModulesPath + "react-router"
+		}
+	}
 }
 
 // webpack使用总结：

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>计算器</title>
+	<style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+			font-size: 14px;
+		}
+		#container{
+			width: 300px;
+			margin: 0px auto;
+			background-color: red;
+			padding: 5px 0px;
+
+		}
+		#containerBox{
+			width: 95%;
+			margin: 0px auto;
+			background-color: gray;
+		}
+		#screen{
+			height: 100px;
+			background-color: white;
+		}
+		#btnBox{
+			overflow: hidden;
+		}
+		#btnBox ul{
+			overflow: hidden;
+		}
+		#btnBox ul li{
+			display: block;
+			width: 25%;
+			
+			
+			float: left;
+			text-align: center;
+			line-height: 30px;
+		}
+		#btnBox ul li span{
+			width: 80%;
+			height: 30px;
+			background-color: orange;
+			display: block;
+			margin: 5px auto;
+			border-radius: 4px;
+		}
+		.clearBtn{
+			width: 100% !important;
+		}
+		.clearBtn span{
+			width: 100px !important;
+			float: right;
+		}
+	</style>
+	<script type="text/javascript">
+		window.onload = function(){
+			var screen = document.getElementById('screen');
+			var btnBox = document.getElementById("btnBox");
+			var btnList = btnBox.getElementsByTagName('li');
+			var html = "";
+			var operate = ["*","/","+","-"];
+			var res;
+			btnBox.onclick = function(e){
+				var v = e.target.innerText;
+				if(v == "="){
+					res = eval(html);
+					screen.innerText = res;
+				}else if(v == "清空"){
+					screen.innerText = "";
+					html = "";
+				}else{
+					if(parseInt(v).toString() != "NaN"){
+						html += parseInt(v);
+					}else if(operate.indexOf(v)>-1){
+						html += v;
+					}
+					screen.innerText = html;
+				}
+
+				
+			}
+		}
+
+
+
+	</script>
+</head>
+<body>
+	<div id="container">
+		<div id="containerBox">
+			<div id="screen"></div>
+			<div id="btnBox">
+				<ul>
+					<li class="clearBtn"><span>清空</span></li>
+					<li><span>7</span></li>
+					<li><span>8</span></li>
+					<li><span>9</span></li>
+					<li><span>*</span></li>
+					<li><span>4</span></li>
+					<li><span>5</span></li>
+					<li><span>6</span></li>
+					<li><span>-</span></li>
+					<li><span>1</span></li>
+					<li><span>2</span></li>
+					<li><span>3</span></li>
+					<li><span>+</span></li>
+					<li><span>0</span></li>
+					<li><span>(</span></li>
+					<li><span>)</span></li>
+					<li><span>/</span></li>
+					<li class="getResBtn"><span>=</span></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
