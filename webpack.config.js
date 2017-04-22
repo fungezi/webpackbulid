@@ -3,36 +3,37 @@ var path = require("path");
 var webpack = require("webpack");
 var htmlWebpackPlugin = require("html-webpack-plugin");
 var extracTtextWebpackPlugin = require("extract-text-webpack-plugin");//生成css文件
-var nodeModulesPath = "/node_modules/";
-var path = require("path");
-var src = "./src";
-var style = "./style";
+var nodeModulesPath = path.join(__dirname, 'node_modules');
+var src = path.join(__dirname,"src");
+var style = path.join(__dirname,"style");
 module.exports = {
+	devtool: 'cheap-module-eval-source-map',
 	entry: {
-		index: "./src/index.js",
+		index: "./src/routes.js",
 		// vendors:["react","react-dom","redux"]
 	},
 	output: {
 		path: path.join(__dirname,"bulid"),
 		filename: "js/[name].[hash].js",
+		chunkFilename: '[name].[chunkhash:5].min.js',
 	},
 	resolve: {
 		extensions: [".js",".css",".jsx",".scss"],
 		modules: ["static","style","src","node_modules"],
 		alias: {
-			'react': nodeModulesPath + "react",
-			'react-dom': nodeModulesPath + "react-dom",
-			'redux': nodeModulesPath + "redux",
-			'react-redux': nodeModulesPath + "react-redux",
-			'react-router': nodeModulesPath + "react-router"
+			'react': path.join(nodeModulesPath,"react"),
+			'react-dom': path.join(nodeModulesPath,"react-dom"),
+			'redux': path.join(nodeModulesPath,"redux"),
+			'react-redux': path.join(nodeModulesPath,"react-redux"),
+			'react-router': path.join(nodeModulesPath,"react-router")
 		}
 	},
 	module: {
 		loaders: [
 			{
-				test: /\.js$/, 
-				loader: "babel-loader",
-				query: {presets: ['es2015']},
+				test: /(\.js|\.jsx)$/, 
+				loader: ['babel-loader?cacheDirectory'],
+				// query: {presets: ['es2015']},
 				include: src 
 			},
 	        {
@@ -54,7 +55,7 @@ module.exports = {
 	plugins: [//主要完成文件的操作
 		new htmlWebpackPlugin({template: path.join(__dirname,"template/index.html")}),//根据模板文件生成html
 		new extracTtextWebpackPlugin("/style/styles.[hash].css"),
-		new webpack.optimize.CommonsChunkPlugin({name:'vendors', filename:'js/vendors.[hash].js'}),//根据入口处的第三方依赖文件生成vendor文件js
+		new webpack.optimize.CommonsChunkPlugin({name:'vendors',filename:'js/vendors.[hash].js'})//根据入口处的第三方依赖文件生成vendor文件js
 	]
 	
 }
